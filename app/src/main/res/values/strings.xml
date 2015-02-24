@@ -2,9 +2,11 @@
     <string name="app_name">Simple DPI Calculator</string>
 
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_about">About this app</string>
 
     <string name="pixels_hint">Enter pixels</string>
     <string name="pixels_suffix">px</string>
+
+    <string name="app_credits">Developed by sourcerebels\n\n<a href="http://www.sourcerebels.com">http://www.sourcerebels.com</a> </string>
 
 </resources>

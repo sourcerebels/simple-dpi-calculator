@@ -1,5 +1,7 @@
 package com.sourcerebels.simpledpicalculator;
 
+import android.app.DialogFragment;
+import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 
 import com.sourcerebels.simpledpicalculator.adapter.DensitiesAdapter;
 import com.sourcerebels.simpledpicalculator.adapter.ResultsAdapter;
+import com.sourcerebels.simpledpicalculator.dialog.AboutDialog;
 import com.sourcerebels.simpledpicalculator.model.DpiCalculator;
 import com.sourcerebels.simpledpicalculator.model.ScreenDensity;
 
@@ -41,63 +44,47 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
     @InjectView(R.id.sp_densities)
     Spinner mSpDensities;
 
-    ResultsAdapter mAdapter;
+    private ResultsAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         initialize();
     }
 
+    @Override
+    protected void onPause() {
+
+        AboutDialog.hide(getFragmentManager());
+        super.onPause();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        int id = item.getItemId();
+        if (id == R.id.action_about) {
+
+            AboutDialog.show(getFragmentManager());
             return true;
         }
-
         return super.onOptionsItemSelected(item);
-    }
-
-    private void initialize() {
-
-        mSpDensities.setAdapter(new DensitiesAdapter(this));
-        mAdapter = new ResultsAdapter(this);
-        mList.setAdapter(mAdapter);
-        mSpDensities.setSelection(DEFAULT_SCREEN_DENSITY.ordinal());
-        mSpDensities.setOnItemSelectedListener(this);
-        mEdtPixels.setOnEditorActionListener(this);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
         calculate();
-    }
-
-    private void calculate() {
-
-        ScreenDensity density = (ScreenDensity) mSpDensities.getSelectedItem();
-
-        if (TextUtils.isEmpty(mEdtPixels.getText())) {
-
-            mEdtPixels.setText(String.valueOf(0));
-        }
-        mAdapter.setResults(DpiCalculator.calculate(density, Float.valueOf(mEdtPixels.getText().toString())));
     }
 
     @Override
@@ -117,5 +104,33 @@ public class MainActivity extends ActionBarActivity implements AdapterView.OnIte
             return true;
         }
         return false;
+    }
+
+    /**
+     * Initializes this activity.
+     */
+    private void initialize() {
+
+        mSpDensities.setAdapter(new DensitiesAdapter(this));
+        mAdapter = new ResultsAdapter(this);
+        mList.setAdapter(mAdapter);
+        mSpDensities.setSelection(DEFAULT_SCREEN_DENSITY.ordinal());
+        mSpDensities.setOnItemSelectedListener(this);
+        mEdtPixels.setOnEditorActionListener(this);
+    }
+
+    /**
+     * Calculates values for all densities.
+     */
+    private void calculate() {
+
+        ScreenDensity density = (ScreenDensity) mSpDensities.getSelectedItem();
+
+        if (TextUtils.isEmpty(mEdtPixels.getText())) {
+
+            mEdtPixels.setText(String.valueOf(0));
+        }
+        mAdapter.setResults(
+                DpiCalculator.calculate(density, Float.valueOf(mEdtPixels.getText().toString())));
     }
 }
