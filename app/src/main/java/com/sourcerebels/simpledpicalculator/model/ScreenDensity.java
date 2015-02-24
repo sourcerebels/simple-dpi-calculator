@@ -23,4 +23,9 @@ public enum ScreenDensity {
 
         return mFactor;
     }
+
+    public boolean greaterThan(ScreenDensity other) {
+
+        return ordinal() > other.ordinal();
+    }
 }

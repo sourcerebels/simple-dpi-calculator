@@ -12,7 +12,7 @@ public class DpiCalculator {
      * Calculate given value for each density.
      *
      * @param sourceDensity Source density.
-     * @param value   Source value.
+     * @param value         Source value.
      * @return Results list.
      */
     public static List<Result> calculate(ScreenDensity sourceDensity, float value) {
@@ -20,25 +20,32 @@ public class DpiCalculator {
         value = toMdpi(sourceDensity, value);
 
         List<Result> result = new ArrayList<>();
-        for (int i = 0; i < ScreenDensity.values().length; i++) {
+        for (ScreenDensity density : ScreenDensity.values()) {
 
-            ScreenDensity density = ScreenDensity.values()[i];
             result.add(new Result(density, value * density.getFactor()));
         }
         return result;
     }
 
+    /**
+     * Converts a value in given density to mdpi.
+     *
+     * @param sourceDensity Source density.
+     * @param value         Source value.
+     * @return MDPI value.
+     */
     private static float toMdpi(ScreenDensity sourceDensity, float value) {
 
-        if (sourceDensity != ScreenDensity.MDPI) {
+        if (sourceDensity == ScreenDensity.MDPI) {
 
-            if (sourceDensity.ordinal() > ScreenDensity.MDPI.ordinal()) {
-
-                return value / sourceDensity.getFactor();
-
-            }
-            return value * sourceDensity.getFactor();
+            return value;
         }
-        return value;
+
+        float factor = sourceDensity.getFactor();
+        if (sourceDensity.greaterThan(ScreenDensity.MDPI)) {
+
+            return value / factor;
+        }
+        return value * factor;
     }
 }
