@@ -16,6 +16,7 @@
 
     <style name="TwoWayView">
         <item name="android:orientation">vertical</item>
+        <item name="android:listSelector">@android:color/transparent</item>
     </style>
 
 </resources>
