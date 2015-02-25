@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -28,6 +29,12 @@ limitations under the License.
         android:gravity="center_vertical"
         android:textAppearance="@android:style/TextAppearance.Large"
         android:drawableLeft="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="v 1.0"/>
 
     <TextView
         android:id="@+id/about_credits"

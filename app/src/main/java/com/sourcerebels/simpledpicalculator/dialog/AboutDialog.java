@@ -21,10 +21,18 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 
 import com.sourcerebels.simpledpicalculator.R;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * About dialog
@@ -33,15 +41,26 @@ public class AboutDialog extends DialogFragment {
 
     private static final String ABOUT_DIALOG_TAG = "about";
 
+    @InjectView(R.id.tv_version)
+    TextView mTvVersion;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Activity context = getActivity();
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         LayoutInflater inflater = LayoutInflater.from(context);
-        builder.setView(inflater.inflate(R.layout.dialog_about, null));
+
+        View layout = inflater.inflate(R.layout.dialog_about, null);
+
+        ButterKnife.inject(this, layout);
+
+        decorate();
+
+        builder.setView(layout);
         return builder.create();
     }
+
 
     /**
      * Shows this dialog.
@@ -64,6 +83,33 @@ public class AboutDialog extends DialogFragment {
         Fragment f = fm.findFragmentByTag(ABOUT_DIALOG_TAG);
         if (f != null) {
             ((DialogFragment) f).dismiss();
+        }
+    }
+
+    /**
+     * Decorates this dialog.
+     */
+    private void decorate() {
+
+        mTvVersion.setText("v " + getVersionName());
+    }
+
+    /**
+     * Gets the application versionName.
+     *
+     * @return Application versionName.
+     */
+    private String getVersionName() {
+
+        try {
+
+            Context ctx = getActivity();
+            PackageInfo pInfo = ctx.getPackageManager().getPackageInfo(ctx.getPackageName(), 0);
+            return pInfo.versionName;
+
+        } catch (PackageManager.NameNotFoundException e) {
+
+            return "undefined";
         }
     }
 }
